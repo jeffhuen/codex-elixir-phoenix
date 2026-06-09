@@ -8,7 +8,7 @@
       "name": "codex-elixir-phoenix",
       "source": {
         "source": "local",
-        "path": "./"
+        "path": "./plugins/codex-elixir-phoenix"
       },
       "policy": {
         "installation": "AVAILABLE",
