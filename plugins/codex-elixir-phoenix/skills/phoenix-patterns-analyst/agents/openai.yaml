@@ -1,4 +1,0 @@
-interface:
-  display_name: "Phoenix Patterns Analyst"
-  short_description: "Analyzes codebase for existing Phoenix patterns, contexts"
-  default_prompt: "Use $phoenix-patterns-analyst to run the Phoenix Patterns Analyst specialist workflow for this Elixir/Phoenix task."

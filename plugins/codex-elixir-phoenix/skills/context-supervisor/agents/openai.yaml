@@ -1,4 +1,0 @@
-interface:
-  display_name: "Context Supervisor"
-  short_description: "Compresses multi-agent output into consolidated summaries to"
-  default_prompt: "Use $context-supervisor to run the Context Supervisor specialist workflow for this Elixir/Phoenix task."

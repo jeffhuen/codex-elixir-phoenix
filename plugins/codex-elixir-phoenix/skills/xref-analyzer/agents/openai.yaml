@@ -1,4 +1,0 @@
-interface:
-  display_name: "Xref Analyzer"
-  short_description: "Analyze module dependencies and context boundaries using mix"
-  default_prompt: "Use $xref-analyzer to run the Xref Analyzer specialist workflow for this Elixir/Phoenix task."

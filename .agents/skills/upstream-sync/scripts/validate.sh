@@ -25,6 +25,7 @@ for required in \
   'hooks/hooks.json' \
   'Codex Vs Claude Translation' \
   'agent-sources' \
+  'Do not expose upstream Claude agents as Codex skills' \
   'Model Mapping' \
   'model_reasoning_effort' \
   'PermissionRequest' \
@@ -39,5 +40,9 @@ for required in \
 do
   grep -q "$required" "$REFERENCE" || fail "checklist missing: $required"
 done
+
+if grep -Eq 'generate-agent-skills|agent-skills_test' "$SKILL" "$REFERENCE"; then
+  fail "checklist must not reference removed agent skill wrapper generation"
+fi
 
 echo "upstream-sync validate: guardrails verified"

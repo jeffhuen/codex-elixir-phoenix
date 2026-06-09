@@ -60,8 +60,8 @@ tooling change.
 |-------------------------|-----------------|
 | Slash command file | Convert to a Codex plugin skill or skill instruction. Do not ship Claude slash-command runtime assumptions. |
 | Claude `Task` tool | Treat as Codex subagent delegation only when the current run explicitly authorizes subagents; otherwise run the track inline. |
-| Claude named agent Markdown | Keep as source in `agent-sources/*.md`, then generate Codex agent-skill wrappers with `tools/generate-agent-skills.mjs` and optional custom-agent TOML with `tools/generate-codex-agents.mjs`. |
-| Claude `Agent(subagent_type: "...")` examples | Treat as pseudocode. Use the matching generated agent skill directly, or built-in `worker` / `explorer` fallback when delegation is explicitly authorized. |
+| Claude named agent Markdown | Keep as source in `agent-sources/*.md`, then generate optional custom-agent TOML with `tools/generate-codex-agents.mjs`. Do not expose upstream Claude agents as Codex skills. |
+| Claude `Agent(subagent_type: "...")` examples | Treat as pseudocode. Use the matching named Codex custom agent when installed and exposed, use built-in `worker` / `explorer` fallback when delegation is explicitly authorized, or run the track inline. |
 | Claude namespaces such as `elixir-phoenix:security-analyzer` | Drop the namespace in Codex custom-agent names. |
 | Claude model labels | Never ship as runtime model config. Convert through the model table below. |
 | `tools`, `disallowedTools`, `permissionMode`, `maxTurns`, `omitClaudeMd` | Do not put these in Codex TOML. Translate intent into instructions, `sandbox_mode`, or omit. |
@@ -77,9 +77,8 @@ labels do not belong in generated TOML or runtime instructions.
 
 | Upstream intent | Codex model fields |
 |-----------------|--------------------|
-| Strong/default specialist | `model = "gpt-5.5"`, `model_reasoning_effort = "medium"` |
-| Security, deep review, orchestrator, high-risk design | `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"` |
-| Fast/read-heavy/lightweight helper | `model = "gpt-5.4-mini"`, usually `model_reasoning_effort = "medium"` or `"low"` |
+| Upstream `sonnet`, `haiku`, or default specialist work | `model = "gpt-5.5"`, `model_reasoning_effort = "medium"` |
+| Upstream `opus`, security, deep review, orchestrator, or high-risk design | `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"` when the source intent warrants extra reasoning; otherwise keep `"medium"` |
 | Explicit GPT-5.4 workflow pin | `model = "gpt-5.4"` only when preserving an intentional Codex-side pin |
 
 Update `plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs` when a
@@ -102,13 +101,14 @@ new upstream model label appears. Then regenerate and run
 ## Agents
 
 Upstream agents are Claude Markdown sources stored under `agent-sources/`.
-In this Codex port they produce two
-artifacts:
+In this Codex port they produce one generated artifact:
 
-- Generated Codex skills under `skills/<agent-name>/`, each with
-  `agents/openai.yaml` metadata. This is the reliable plugin-distributed surface.
 - Optional generated custom-agent TOML under `.codex/agents/` for projects or
   Codex builds that support named custom-agent routing.
+
+They must not be converted into `skills/` entries. The reliable
+plugin-distributed surface is the upstream workflow skills plus Codex-owned
+compatibility skills.
 
 Keep plugin-level `agents/` reserved for Codex-native companion prompts such as
 `*-agent.md`. Do not place upstream Claude agent files there; they contain
@@ -116,35 +116,28 @@ Claude-only frontmatter and runtime assumptions.
 
 1. Merge upstream agent changes into `plugins/codex-elixir-phoenix/agent-sources/*.md`.
 2. Preserve useful specialist body instructions.
-3. Regenerate skill wrappers:
-
-```bash
-node plugins/codex-elixir-phoenix/tools/generate-agent-skills.mjs
-```
-
-4. Map Claude model labels through
+3. Map Claude model labels through
    `plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs`:
-   - high-capability Claude labels -> `gpt-5.5`
-   - lightweight Claude labels -> `gpt-5.4-mini`
+   - `sonnet`, `haiku`, and default specialist work -> `gpt-5.5`
+   - `opus` and other high-risk specialist work -> `gpt-5.5`
    - high-risk/security/orchestrator agents -> `model_reasoning_effort = "xhigh"`
    - normal specialists -> `model_reasoning_effort = "medium"`
-5. Run:
+4. Run:
 
 ```bash
 node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
 ```
 
-6. Codex custom agent TOML requires `name`, `description`, and
+5. Codex custom agent TOML requires `name`, `description`, and
    `developer_instructions`. Optional Codex fields include `model`,
    `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and
    `skills.config`.
-7. Plugin install packages `.codex/agents/*.toml`, but Codex discovers named
+6. Plugin install packages `.codex/agents/*.toml`, but Codex discovers named
    custom agents from project `.codex/agents/` or personal `~/.codex/agents/`.
    Keep `$phx-init` and `tools/install-codex-agents.sh` responsible for
    installing project-scoped copies.
-8. Never hand-edit generated `skills/<agent-name>/` wrappers or
-   `.codex/agents/*.toml`.
-9. Generated agent instructions must not contain runtime Claude model labels,
+7. Never hand-edit `.codex/agents/*.toml`.
+8. Generated agent instructions must not contain runtime Claude model labels,
    Anthropic attribution, `permissionMode`, `maxTurns`, or Claude tool
    metadata.
 
@@ -196,8 +189,6 @@ Run these after every upstream sync:
 
 ```bash
 node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
-node plugins/codex-elixir-phoenix/tools/generate-agent-skills.mjs
-bash plugins/codex-elixir-phoenix/tests/agent-skills_test.sh
 bash plugins/codex-elixir-phoenix/tests/codex-agents_test.sh
 bash plugins/codex-elixir-phoenix/tests/install-codex-agents_test.sh
 .agents/skills/upstream-sync/scripts/validate.sh

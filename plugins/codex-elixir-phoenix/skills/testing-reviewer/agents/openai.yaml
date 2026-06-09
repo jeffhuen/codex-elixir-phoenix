@@ -1,4 +1,0 @@
-interface:
-  display_name: "Testing Reviewer"
-  short_description: "Reviews test code for Elixir best practices"
-  default_prompt: "Use $testing-reviewer to run the Testing Reviewer specialist workflow for this Elixir/Phoenix task."

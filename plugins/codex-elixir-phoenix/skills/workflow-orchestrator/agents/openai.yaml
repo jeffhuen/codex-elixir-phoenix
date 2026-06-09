@@ -1,4 +1,0 @@
-interface:
-  display_name: "Workflow Orchestrator"
-  short_description: "Orchestrates the full agentic workflow cycle (plan → work →"
-  default_prompt: "Use $workflow-orchestrator to run the Workflow Orchestrator specialist workflow for this Elixir/Phoenix task."

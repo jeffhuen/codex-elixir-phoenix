@@ -1,7 +1,7 @@
 {
   "name": "codex-elixir-phoenix",
-  "version": "2.11.0+codex.20260609040741",
-  "description": "Elixir/Phoenix/LiveView development with specialist agent skills, Codex custom-agent templates, Iron Laws, hooks, and Tidewave MCP guidance.",
+  "version": "2.11.0+codex.20260609053749",
+  "description": "Elixir/Phoenix/LiveView development with Codex skills, optional custom-agent templates, Iron Laws, hooks, and Tidewave MCP guidance.",
   "author": {
     "name": "Oliver Kriska",
     "email": "oliver@kriska.dev",
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Codex Elixir Phoenix",
     "shortDescription": "Elixir, Phoenix, LiveView, Ecto, Ash, Oban, and OTP workflows for Codex.",
-    "longDescription": "A Codex-compatible port of Oliver Kriska's Claude Elixir/Phoenix plugin. It bundles focused skills for planning, review, verification, debugging, dependency auditing, LiveView patterns, Ecto and Ash patterns, Oban, deployment, and security, plus generated specialist agent skills, lifecycle hooks adapted to Codex's hook contract, and optional Codex custom-agent templates for project-scoped subagent routing.",
+    "longDescription": "A Codex-compatible port of Oliver Kriska's Claude Elixir/Phoenix plugin. It bundles focused skills for planning, review, verification, debugging, dependency auditing, LiveView patterns, Ecto and Ash patterns, Oban, deployment, and security, plus lifecycle hooks adapted to Codex's hook contract and optional Codex custom-agent templates for project-scoped subagent routing.",
     "developerName": "Oliver Kriska",
     "category": "Development",
     "capabilities": [

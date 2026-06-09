@@ -38,12 +38,11 @@ instructions in Codex, apply these mappings.
 
 ## Subagents And Custom Agents
 
-- Codex plugin-distributed skills are the reliable equivalent for upstream
-  Claude named agents in this port. Use the generated `$ash-resource-designer`,
-  `$security-analyzer`, `$verification-runner`, and similar agent skills first.
-- Upstream `agent-sources/*.md` files are source material. Generated Codex
-  agent-skill wrappers live under `skills/<agent-name>/SKILL.md`, with skill UI
-  metadata in `skills/<agent-name>/agents/openai.yaml`.
+- Codex plugin-distributed skills are the stable workflow and pattern surface
+  for this port. Do not expose upstream Claude named agents as additional
+  plugin skills.
+- Upstream `agent-sources/*.md` files are source material for optional Codex
+  custom-agent TOML generated under `.codex/agents/*.toml`.
 - Do not put upstream Claude agent sources in the plugin-level `agents/`
   directory. That directory is reserved for Codex-native companion prompts such
   as `*-agent.md` if this plugin later needs that surface.
@@ -52,9 +51,10 @@ instructions in Codex, apply these mappings.
 - Codex only spawns subagents when explicitly asked or when the selected skill
   says delegation is authorized for the task. Otherwise run the same specialist
   track inline.
-- Claude `Agent(...)` examples are pseudocode in Codex. Use the matching
-  generated agent skill directly, or delegate to built-in `worker` / `explorer`
-  subagents when delegation is explicitly authorized.
+- Claude `Agent(...)` examples are pseudocode in Codex. Use the matching named
+  Codex custom agent when installed and exposed, delegate to built-in `worker` /
+  `explorer` subagents when delegation is explicitly authorized, or run the
+  specialist track inline.
 - Codex discovers custom agents from the current project `.codex/agents/` or
   personal `~/.codex/agents/`. The optional generated TOML files under this
   plugin at `.codex/agents/*.toml` must be copied with `$phx-init` before they
@@ -65,8 +65,9 @@ instructions in Codex, apply these mappings.
 - Codex custom agents are TOML and require `name`, `description`, and
   `developer_instructions`. Optional model control uses `model` and
   `model_reasoning_effort`, not Claude model family labels.
-- Model guidance for this port: demanding specialists use `gpt-5.5`; fast
-  read-heavy helpers may use `gpt-5.4-mini`; high-risk security/review or
+- Model guidance for this port: upstream Claude `opus`, `sonnet`, and `haiku`
+  labels map to `gpt-5.5`; normal specialists use
+  `model_reasoning_effort = "medium"` and high-risk security/review or
   orchestration can use `model_reasoning_effort = "xhigh"`.
 - Ignore upstream `tools`, `disallowedTools`, `permissionMode`, `maxTurns`, and
   `omitClaudeMd` as config fields. Translate their intent into normal Codex

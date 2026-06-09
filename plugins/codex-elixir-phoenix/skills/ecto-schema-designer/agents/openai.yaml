@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ecto Schema Designer"
-  short_description: "Ecto schema architect specialist workflow"
-  default_prompt: "Use $ecto-schema-designer to run the Ecto Schema Designer specialist workflow for this Elixir/Phoenix task."

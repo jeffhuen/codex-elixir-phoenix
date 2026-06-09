@@ -1,4 +1,0 @@
-interface:
-  display_name: "Requirements Verifier"
-  short_description: "Cross-check implementation against task requirements (Linear"
-  default_prompt: "Use $requirements-verifier to run the Requirements Verifier specialist workflow for this Elixir/Phoenix task."

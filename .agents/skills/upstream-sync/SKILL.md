@@ -26,8 +26,7 @@ gates must pass.
 3. Before editing hooks or agents, apply the Codex-vs-Claude translation tables
    in the conversion checklist.
 4. Apply upstream changes selectively using the conversion checklist.
-5. Regenerate generated Codex artifacts, especially skill wrappers and
-   `.codex/agents/*.toml`.
+5. Regenerate generated Codex artifacts, especially `.codex/agents/*.toml`.
 6. Run all checklist validation commands.
 7. Bump `plugins/codex-elixir-phoenix/.codex-plugin/plugin.json` with a new
    `+codex.<timestamp>` cachebuster only when packaged plugin files change.
@@ -38,8 +37,8 @@ gates must pass.
 
 - Do not blindly merge upstream into `main`.
 - Do not copy Claude hook manifests into `plugins/codex-elixir-phoenix/hooks/hooks.json`.
-- Do not hand-edit generated skill wrappers or `.codex/agents/*.toml`; edit
-  `agent-sources/*.md` and run the generators.
+- Do not hand-edit `.codex/agents/*.toml`; edit `agent-sources/*.md` and run
+  `tools/generate-codex-agents.mjs`.
 - Do not rename the Codex plugin, marketplace, homepage, or repository back to
   upstream Claude values.
 - Do not drop Codex compatibility assets: `skills/codex-compat/`,

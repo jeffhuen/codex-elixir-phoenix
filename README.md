@@ -22,11 +22,10 @@ review and trust them with `/hooks`.
 ## Specialist Agents
 
 Upstream Claude agents are source material in `plugins/codex-elixir-phoenix/agent-sources/*.md`.
-For Codex plugin distribution, this repo generates matching skill wrappers under
-`plugins/codex-elixir-phoenix/skills/<agent-name>/` with `agents/openai.yaml`
-metadata. That makes specialists such as `$ash-resource-designer`,
-`$ash-policy-reviewer`, `$security-analyzer`, and `$verification-runner`
-available as normal Codex skills after plugin install.
+They are not exposed as plugin skills. The plugin `skills/` directory tracks
+upstream workflow skills plus Codex-specific compatibility skills, while the
+upstream agent Markdown stays available as source material for optional Codex
+custom-agent templates.
 
 The plugin-level `agents/` directory is intentionally not used for upstream
 Claude files. OpenAI plugin examples may use `agents/*-agent.md` for
@@ -37,7 +36,8 @@ The repo also generates optional Codex custom-agent TOML files under
 `plugins/codex-elixir-phoenix/.codex/agents/`. Codex custom-agent discovery is
 project/personal scoped, so run `$phx-init` inside an Elixir/Phoenix project if
 you want those copied into `.codex/agents/` without overwriting user-owned agent
-files. Use the generated skills as the reliable plugin-distributed route.
+files. If the active Codex surface does not expose named custom-agent routing,
+run the same specialist track inline or through authorized built-in subagents.
 
 The installer can also be run directly from this repo:
 
@@ -48,9 +48,7 @@ plugins/codex-elixir-phoenix/tools/install-codex-agents.sh /path/to/elixir-proje
 Regenerate and validate the packaged agents after upstream updates:
 
 ```bash
-node plugins/codex-elixir-phoenix/tools/generate-agent-skills.mjs
 node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
-bash plugins/codex-elixir-phoenix/tests/agent-skills_test.sh
 bash plugins/codex-elixir-phoenix/tests/codex-agents_test.sh
 bash plugins/codex-elixir-phoenix/tests/install-codex-agents_test.sh
 ```

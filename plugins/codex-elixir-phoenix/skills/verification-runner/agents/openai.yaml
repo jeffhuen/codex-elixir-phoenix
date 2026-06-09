@@ -1,4 +1,0 @@
-interface:
-  display_name: "Verification Runner"
-  short_description: "Run project-aware verification loop. Reads mix.exs to discover"
-  default_prompt: "Use $verification-runner to run the Verification Runner specialist workflow for this Elixir/Phoenix task."

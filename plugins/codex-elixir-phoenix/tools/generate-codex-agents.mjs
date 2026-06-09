@@ -11,7 +11,7 @@ const outputDir = path.join(pluginRoot, ".codex", "agents");
 const MODEL_MAP = new Map([
   ["opus", "gpt-5.5"],
   ["sonnet", "gpt-5.5"],
-  ["haiku", "gpt-5.4-mini"],
+  ["haiku", "gpt-5.5"],
 ]);
 
 const EFFORT_MAP = new Map([
@@ -69,14 +69,32 @@ function unquote(value) {
   return value;
 }
 
+function claudeFamily(model) {
+  const lower = String(model || "").toLowerCase();
+  for (const family of MODEL_MAP.keys()) {
+    if (lower.includes(family)) return family;
+  }
+  return null;
+}
+
 function normalizeModel(model) {
   const value = String(model || "gpt-5.5").trim();
+  const family = claudeFamily(value);
+  if (family) return MODEL_MAP.get(family);
   return MODEL_MAP.get(value) || value;
 }
 
-function normalizeEffort(effort) {
+function normalizeEffort(effort, model) {
   const value = String(effort || "medium").trim();
-  return EFFORT_MAP.get(value) || "medium";
+  const normalized = EFFORT_MAP.get(value) || "medium";
+  const family = claudeFamily(model);
+  if (
+    (family === "sonnet" || family === "haiku") &&
+    ["minimal", "low"].includes(normalized)
+  ) {
+    return "medium";
+  }
+  return normalized;
 }
 
 function tomlString(value) {
@@ -128,7 +146,7 @@ function buildToml({ data, body, sourceFile }) {
     `name = ${tomlString(data.name)}`,
     `description = ${tomlString(data.description)}`,
     `model = ${tomlString(normalizeModel(data.model))}`,
-    `model_reasoning_effort = ${tomlString(normalizeEffort(data.effort))}`,
+    `model_reasoning_effort = ${tomlString(normalizeEffort(data.effort, data.model))}`,
     `developer_instructions = ${tomlString(instructions)}`,
     "",
   ].join("\n");

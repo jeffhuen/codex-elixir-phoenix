@@ -62,14 +62,10 @@ Read `mix.exs` and use Grep to extract:
 
 ### Step 4: Install Optional Codex Custom Agents
 
-The primary plugin-distributed equivalent of upstream Claude named agents is the
-generated skill wrapper set, such as `$ash-resource-designer`,
-`$security-analyzer`, and `$verification-runner`. Those are available after
-plugin install.
-
-This optional step installs generated Codex custom-agent TOML files into the
-current project for Codex builds that support project-scoped named custom-agent
-routing. The generated TOML files live in the installed plugin at:
+Upstream Claude named agents are not installed as plugin skills. This optional
+step installs generated Codex custom-agent TOML files into the current project
+for Codex builds that support project-scoped named custom-agent routing. The
+generated TOML files live in the installed plugin at:
 
 ```
 <skill-dir>/../../.codex/agents/*.toml
@@ -109,6 +105,9 @@ can be used for delegated specialist tracks such as:
 - `security-analyzer`
 - `testing-reviewer`
 - `verification-runner`
+
+If named custom agents are unavailable, run the same specialist tracks inline or
+through authorized built-in Codex subagents.
 
 If `--agents-only` is present, stop after this step and validation.
 
@@ -192,7 +191,7 @@ After running `$phx-init`:
    - Auto-detect complexity when given tasks
    - Stop on Iron Law violations
    - Offer relevant workflows based on task
-   - Use generated agent skills for specialist tracks; use named Codex custom agents only when the active surface exposes them
+   - Use named Codex custom agents for specialist tracks when installed and exposed; otherwise run those tracks inline or with authorized built-in subagents
 
 ## Error Handling
 

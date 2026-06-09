@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ash Policy Reviewer"
-  short_description: "Ash policy security reviewer"
-  default_prompt: "Use $ash-policy-reviewer to run the Ash Policy Reviewer specialist workflow for this Elixir/Phoenix task."

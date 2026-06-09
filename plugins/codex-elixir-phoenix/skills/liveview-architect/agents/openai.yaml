@@ -1,4 +1,0 @@
-interface:
-  display_name: "Liveview Architect"
-  short_description: "LiveView architecture specialist"
-  default_prompt: "Use $liveview-architect to run the Liveview Architect specialist workflow for this Elixir/Phoenix task."

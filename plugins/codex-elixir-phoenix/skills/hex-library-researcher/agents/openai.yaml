@@ -1,4 +1,0 @@
-interface:
-  display_name: "Hex Library Researcher"
-  short_description: "Researches Elixir libraries on hex.pm"
-  default_prompt: "Use $hex-library-researcher to run the Hex Library Researcher specialist workflow for this Elixir/Phoenix task."

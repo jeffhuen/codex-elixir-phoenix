@@ -1,4 +1,0 @@
-interface:
-  display_name: "Deployment Validator"
-  short_description: "Deployment configuration validator"
-  default_prompt: "Use $deployment-validator to run the Deployment Validator specialist workflow for this Elixir/Phoenix task."

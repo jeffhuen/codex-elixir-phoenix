@@ -1,4 +1,0 @@
-interface:
-  display_name: "Security Analyzer"
-  short_description: "Security audit specialist for Elixir/Phoenix"
-  default_prompt: "Use $security-analyzer to run the Security Analyzer specialist workflow for this Elixir/Phoenix task."
