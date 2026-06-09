@@ -40,3 +40,9 @@ node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
 bash plugins/codex-elixir-phoenix/tests/codex-agents_test.sh
 bash plugins/codex-elixir-phoenix/tests/install-codex-agents_test.sh
 ```
+
+## Upstream Updates
+
+This repo includes a maintainer-only `$upstream-sync` skill under
+`.agents/skills/upstream-sync`. Use it when porting a new upstream release, PR,
+or commit from `oliver-kriska/claude-elixir-phoenix`.
