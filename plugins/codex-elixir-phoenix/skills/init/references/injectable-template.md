@@ -21,6 +21,7 @@ These rules govern ALL `$phx-*` workflow execution. Violations invalidate the se
 5. **Read the SKILL.md BEFORE executing.** Parse the workflow steps and execute them sequentially. Do not improvise a different workflow.
 6. **No unauthorized judgment calls.** If the skill does not define an early-exit condition, there is no early exit.
 7. **Research output MUST be saved to `.claude/plans/{slug}/research/`.** Write track findings to `.claude/plans/{slug}/research/{track-name}-report.md` before synthesizing into the plan.
+8. **Named specialist agents require `.codex/agents`.** If this project has generated Codex custom agents, use their names directly. If not, delegate to built-in `worker` / `explorer` subagents or run the track inline.
 
 ---
 
@@ -89,6 +90,8 @@ Check file patterns being edited:
 
 You MUST run these specialist tracks when triggers match. Delegate only when
 Codex subagents are available and authorized; otherwise run them inline.
+When `.codex/agents/*.toml` contains a matching custom agent, use that named
+agent directly. Do not use Claude namespaces or Claude model names.
 
 | Trigger | Track | When |
 |---------|-------|------|
@@ -98,6 +101,9 @@ Codex subagents are available and authorized; otherwise run them inline.
 | `*_live.ex` + architecture decisions | liveview-architect | On design |
 | `*/migrations/*`, schema design | ecto-schema-designer | On schema work |
 | auth, login, password, token, session | security-analyzer | ALWAYS |
+| Ash resource design | ash-resource-designer | On design |
+| Ash policies | ash-policy-reviewer | On review |
+| Ash query/load performance | ash-query-optimizer | On review |
 
 ### STEP 7: PROCEED with response
 

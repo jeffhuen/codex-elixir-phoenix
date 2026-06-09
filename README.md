@@ -15,3 +15,28 @@ codex plugin add codex-elixir-phoenix@codex-elixir-phoenix
 
 After install, start a new Codex session. If Codex reports new hook definitions,
 review and trust them with `/hooks`.
+
+## Subagents
+
+Codex subagents are the Codex-native equivalent of the upstream Claude agents.
+This plugin keeps upstream `agents/*.md` as source material and generates Codex
+custom-agent TOML files under `plugins/codex-elixir-phoenix/.codex/agents/`.
+
+Codex discovers named custom agents from a project `.codex/agents/` directory,
+so run `$phx-init` inside each Elixir/Phoenix project after installing the
+plugin. It runs the bundled installer to refresh generated agents without
+overwriting user-owned agent files.
+
+The installer can also be run directly from this repo:
+
+```bash
+plugins/codex-elixir-phoenix/tools/install-codex-agents.sh /path/to/elixir-project
+```
+
+Regenerate and validate the packaged agents after upstream updates:
+
+```bash
+node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
+bash plugins/codex-elixir-phoenix/tests/codex-agents_test.sh
+bash plugins/codex-elixir-phoenix/tests/install-codex-agents_test.sh
+```

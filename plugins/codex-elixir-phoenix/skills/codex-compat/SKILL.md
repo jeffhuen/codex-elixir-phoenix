@@ -36,6 +36,23 @@ instructions in Codex, apply these mappings.
 - `ask the user directly` means ask the user directly in Codex when a real decision
   gate remains.
 
+## Subagents And Custom Agents
+
+- Codex subagents are the equivalent of upstream Claude agents.
+- Upstream `agents/*.md` files are source material. Generated Codex custom
+  agents live under this plugin at `.codex/agents/*.toml`.
+- Codex discovers custom agents from the current project `.codex/agents/` or
+  personal `~/.codex/agents/`. A plugin install does not, by itself, make
+  plugin-bundled agent files discoverable as named custom agents.
+- Run `$phx-init` in each Elixir/Phoenix project to install or refresh the
+  generated project-scoped custom agents.
+- Use Codex agent names directly, for example `ash-resource-designer` or
+  `security-analyzer`. Do not use Claude namespaces such as
+  `elixir-phoenix:security-analyzer`.
+- If named custom agents are unavailable, delegate to built-in Codex
+  `worker` / `explorer` subagents with the same checklist, or run the track
+  inline when delegation is unavailable or unauthorized.
+
 ## Paths And Environment
 
 - `<skill-dir>` means the current skill directory. Resolve referenced
