@@ -39,8 +39,13 @@ instructions in Codex, apply these mappings.
 ## Subagents And Custom Agents
 
 - Codex subagents are the equivalent of upstream Claude agents.
+- Codex only spawns subagents when explicitly asked or when the selected skill
+  says delegation is authorized for the task. Otherwise run the same specialist
+  track inline.
 - Upstream `agents/*.md` files are source material. Generated Codex custom
   agents live under this plugin at `.codex/agents/*.toml`.
+- Claude `Agent(...)` examples are pseudocode in Codex. Use available named
+  Codex custom agents directly, or built-in `worker` / `explorer` subagents.
 - Codex discovers custom agents from the current project `.codex/agents/` or
   personal `~/.codex/agents/`. A plugin install does not, by itself, make
   plugin-bundled agent files discoverable as named custom agents.
@@ -49,6 +54,15 @@ instructions in Codex, apply these mappings.
 - Use Codex agent names directly, for example `ash-resource-designer` or
   `security-analyzer`. Do not use Claude namespaces such as
   `elixir-phoenix:security-analyzer`.
+- Codex custom agents are TOML and require `name`, `description`, and
+  `developer_instructions`. Optional model control uses `model` and
+  `model_reasoning_effort`, not Claude model family labels.
+- Model guidance for this port: demanding specialists use `gpt-5.5`; fast
+  read-heavy helpers may use `gpt-5.4-mini`; high-risk security/review or
+  orchestration can use `model_reasoning_effort = "xhigh"`.
+- Ignore upstream `tools`, `disallowedTools`, `permissionMode`, `maxTurns`, and
+  `omitClaudeMd` as config fields. Translate their intent into normal Codex
+  instructions or sandbox settings when needed.
 - If named custom agents are unavailable, delegate to built-in Codex
   `worker` / `explorer` subagents with the same checklist, or run the track
   inline when delegation is unavailable or unauthorized.
@@ -66,20 +80,35 @@ instructions in Codex, apply these mappings.
 
 ## Hooks
 
+- Codex hook manifests are event -> matcher group -> command handlers. Keep
+  `hooks/hooks.json` in Codex format with `matcher`, `hooks`, `type:
+  "command"`, `command`, optional `timeout`, and optional `statusMessage`.
 - Codex hook `if` filters such as `Edit(*.ex)` and `Bash(*mix*)` are not a
-  Codex hook manifest feature. In this port, the Codex manifest uses supported
-  tool/event matchers and the dispatcher scripts apply the upstream file,
-  command, and project gates internally.
+  Codex hook manifest feature. Use supported event matchers and put file,
+  command, and project gates inside dispatcher scripts.
+- For tool events, match tool names such as `Bash`, `apply_patch`,
+  `Edit|Write`, or MCP tool names. `PreCompact` / `PostCompact` match
+  `manual|auto`; `SessionStart` matches `startup|resume|clear|compact`.
+- `Stop` and `UserPromptSubmit` do not support matcher filtering.
 - Codex `PostToolUseFailure` behavior is mapped to Codex `PostToolUse` for
   `Bash`; the dispatcher checks the tool response for a failed exit/status
   before invoking the upstream failure-hint scripts.
 - Codex `async` hook handlers are run synchronously when their behavior should
   still exist in Codex, because Codex currently parses but skips async command
   hooks.
+- Codex currently runs command hook handlers. Prompt/agent hook handlers are
+  parsed but skipped.
 - Codex `StopFailure` has no direct Codex event equivalent. Do not add an
   unsupported event name to `hooks/hooks.json`; preserve normal `Stop` behavior
   and only add a best-effort failure shim if Codex exposes a failure signal in
   the hook payload.
+- Plugin hook command strings should remain POSIX-compatible and resolve
+  `PLUGIN_ROOT` / `CODEX_PLUGIN_ROOT` / compatibility `CLAUDE_PLUGIN_ROOT`.
+  Missing roots or scripts must exit 0, not 127.
+- Codex can run multiple matching hooks concurrently, so do not assume one
+  matching hook can block another from starting.
+- Non-managed command hooks require `/hooks` trust review. A changed hook
+  definition gets a new trust hash.
 
 ## Execution Discipline
 

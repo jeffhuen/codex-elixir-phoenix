@@ -51,6 +51,41 @@ Do not restore upstream-only identifiers such as Claude slash-command
 requirements, Claude model names, Anthropic SDK/package requirements, or
 upstream repository install URLs as Codex runtime instructions.
 
+## Codex Vs Claude Translation
+
+Use this table before porting any upstream hook, agent, subagent, model, or
+tooling change.
+
+| Upstream Claude concept | Codex port rule |
+|-------------------------|-----------------|
+| Slash command file | Convert to a Codex plugin skill or skill instruction. Do not ship Claude slash-command runtime assumptions. |
+| Claude `Task` tool | Treat as Codex subagent delegation only when the current run explicitly authorizes subagents; otherwise run the track inline. |
+| Claude named agent Markdown | Keep as source in `agents/*.md`, then generate Codex custom-agent TOML with `tools/generate-codex-agents.mjs`. |
+| Claude `Agent(subagent_type: "...")` examples | Treat as pseudocode. Use Codex named custom agents directly, or built-in `worker` / `explorer` fallback. |
+| Claude namespaces such as `elixir-phoenix:security-analyzer` | Drop the namespace in Codex custom-agent names. |
+| Claude model labels | Never ship as runtime model config. Convert through the model table below. |
+| `tools`, `disallowedTools`, `permissionMode`, `maxTurns`, `omitClaudeMd` | Do not put these in Codex TOML. Translate intent into instructions, `sandbox_mode`, or omit. |
+| Claude hook `if` filters | Codex uses event `matcher` regex plus script-level gates. |
+| Claude `PostToolUseFailure` or `StopFailure` | Codex has no direct event for these names. Model with supported events plus payload/status checks, or omit. |
+| Claude async hook command | Codex parses `async` but skips async command hooks today. Use synchronous command hooks only. |
+| Claude prompt/agent hook handlers | Codex currently runs command handlers; prompt/agent handlers are parsed but skipped. |
+
+## Model Mapping
+
+Codex custom agents use `model` and `model_reasoning_effort`; Claude family
+labels do not belong in generated TOML or runtime instructions.
+
+| Upstream intent | Codex model fields |
+|-----------------|--------------------|
+| Strong/default specialist | `model = "gpt-5.5"`, `model_reasoning_effort = "medium"` |
+| Security, deep review, orchestrator, high-risk design | `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"` |
+| Fast/read-heavy/lightweight helper | `model = "gpt-5.4-mini"`, usually `model_reasoning_effort = "medium"` or `"low"` |
+| Explicit GPT-5.4 workflow pin | `model = "gpt-5.4"` only when preserving an intentional Codex-side pin |
+
+Update `plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs` when a
+new upstream model label appears. Then regenerate and run
+`tests/codex-agents_test.sh`.
+
 ## Skills
 
 - Keep each plugin `SKILL.md` frontmatter with `name` and a concise
@@ -82,8 +117,16 @@ Upstream agents are Claude Markdown sources. Codex custom agents are TOML files.
 node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
 ```
 
-5. Never hand-edit generated `.codex/agents/*.toml`.
-6. Generated agent instructions must not contain runtime Claude model labels,
+5. Codex custom agent TOML requires `name`, `description`, and
+   `developer_instructions`. Optional Codex fields include `model`,
+   `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and
+   `skills.config`.
+6. Plugin install packages `.codex/agents/*.toml`, but Codex discovers named
+   custom agents from project `.codex/agents/` or personal `~/.codex/agents/`.
+   Keep `$phx-init` and `tools/install-codex-agents.sh` responsible for
+   installing project-scoped copies.
+7. Never hand-edit generated `.codex/agents/*.toml`.
+8. Generated agent instructions must not contain runtime Claude model labels,
    Anthropic attribution, `permissionMode`, `maxTurns`, or Claude tool
    metadata.
 
@@ -91,15 +134,30 @@ node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
 
 Upstream Claude hook manifests are not Codex hook manifests.
 
-- Keep `plugins/codex-elixir-phoenix/hooks/hooks.json` in Codex format.
+- Keep `plugins/codex-elixir-phoenix/hooks/hooks.json` in Codex format:
+  `{"hooks": {"Event": [{"matcher": "...", "hooks": [{"type": "command", ...}]}]}}`.
+- Supported useful Codex events include `SessionStart`, `PreToolUse`,
+  `PermissionRequest`, `PostToolUse`, `PreCompact`, `PostCompact`,
+  `UserPromptSubmit`, `SubagentStart`, `SubagentStop`, and `Stop`.
+- Matchers are regex strings over the event's supported value. For tool events,
+  use tool names such as `Bash`, `apply_patch`, `Edit|Write`, or MCP tool
+  names. For compaction use `manual|auto`; for `SessionStart` use
+  `startup|resume|clear|compact`.
+- `Stop` and `UserPromptSubmit` do not support matcher filtering; Codex ignores
+  a configured matcher there.
 - Do not copy unsupported Claude features such as `if` filters, direct
-  `Edit(*.ex)` syntax, `async` behavior assumptions, or unsupported event
-  names.
-- Keep the dispatcher/root-resolution pattern in `hooks/hooks.json`.
+  `Edit(*.ex)` syntax, `async` behavior assumptions, prompt/agent handlers, or
+  unsupported event names.
+- Keep the dispatcher/root-resolution pattern in `hooks/hooks.json`. Manifest
+  commands should stay POSIX-compatible and exec `hooks/scripts/run-hook.sh`.
 - Hook commands must tolerate missing plugin roots and missing scripts without
   exiting with code 127.
 - Hook scripts may accept `PLUGIN_ROOT`, `CODEX_PLUGIN_ROOT`, and compatibility
   `CLAUDE_PLUGIN_ROOT`, but must not require Claude-only variables.
+- Codex runs multiple matching command hooks concurrently. Do not rely on one
+  hook preventing another matching hook from starting.
+- Non-managed command hooks require trust review through `/hooks`; changing a
+  hook changes its trust hash.
 - When upstream adds a hook script, add or adapt the script, then wire it
   through the Codex manifest only if Codex supports the event and matcher.
 

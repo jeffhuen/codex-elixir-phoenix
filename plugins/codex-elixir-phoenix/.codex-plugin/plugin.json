@@ -1,6 +1,6 @@
 {
   "name": "codex-elixir-phoenix",
-  "version": "2.11.0+codex.20260608200829",
+  "version": "2.11.0+codex.20260608202515",
   "description": "Elixir/Phoenix/LiveView development with specialist workflows, Codex custom-agent templates, Iron Laws, hooks, and Tidewave MCP guidance.",
   "author": {
     "name": "Oliver Kriska",

@@ -23,6 +23,14 @@ for required in \
   'tests/codex-agents_test.sh' \
   '.agents/skills/upstream-sync/scripts/validate.sh' \
   'hooks/hooks.json' \
+  'Codex Vs Claude Translation' \
+  'Model Mapping' \
+  'model_reasoning_effort' \
+  'PermissionRequest' \
+  'SubagentStart' \
+  'SubagentStop' \
+  'prompt/agent handlers' \
+  'code 127' \
   'bash -n' \
   '.codex-plugin/plugin.json' \
   'cachebuster' \
