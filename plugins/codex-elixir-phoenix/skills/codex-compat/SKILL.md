@@ -36,45 +36,34 @@ instructions in Codex, apply these mappings.
 - `ask the user directly` means ask the user directly in Codex when a real decision
   gate remains.
 
-## Subagents And Custom Agents
+## Subagents And Bundled Agent Checklists
 
 - Codex plugin-distributed skills are the stable workflow and pattern surface
   for this port. Do not expose upstream Claude named agents as additional
   plugin skills.
-- Upstream `agent-sources/*.md` files are source material for optional Codex
-  custom-agent TOML generated under `.codex/agents/*.toml`.
-- Do not put upstream Claude agent sources in the plugin-level `agents/`
-  directory. That directory is reserved for Codex-native companion prompts such
-  as `*-agent.md` if this plugin later needs that surface.
-- If present, plugin-level `agents/openai.yaml` and skill-level
-  `agents/openai.yaml` are product metadata, not custom-agent manifests.
+- Upstream Claude agent sources live under plugin-level `agents/*.md`. They are
+  bundled specialist checklists and source material, not project-scoped Codex
+  agent config.
+- Plugin-level `agents/openai.yaml` is product metadata for the bundled agents
+  folder, not an agent runtime manifest.
 - Codex only spawns subagents when explicitly asked or when the selected skill
   says delegation is authorized for the task. Otherwise run the same specialist
   track inline.
-- Claude `Agent(...)` examples are pseudocode in Codex. Use the matching named
-  Codex custom agent when installed and exposed, delegate to built-in `worker` /
-  `explorer` subagents when delegation is explicitly authorized, or run the
+- Claude `Agent(...)` examples are pseudocode in Codex. Read the matching
+  `agents/<name>.md` checklist, then delegate to built-in `worker` / `explorer`
+  subagents only when delegation is explicitly authorized, or run the
   specialist track inline.
-- Codex discovers custom agents from the current project `.codex/agents/` or
-  personal `~/.codex/agents/`. The optional generated TOML files under this
-  plugin at `.codex/agents/*.toml` must be copied with `$phx-init` before they
-  can participate in project-scoped custom-agent discovery.
 - Use Codex agent names directly, for example `ash-resource-designer` or
   `security-analyzer`. Do not use Claude namespaces such as
   `elixir-phoenix:security-analyzer`.
-- Codex custom agents are TOML and require `name`, `description`, and
-  `developer_instructions`. Optional model control uses `model` and
-  `model_reasoning_effort`, not Claude model family labels.
-- Model guidance for this port: upstream Claude `opus`, `sonnet`, and `haiku`
-  labels map to `gpt-5.5`; normal specialists use
-  `model_reasoning_effort = "medium"` and high-risk security/review or
-  orchestration can use `model_reasoning_effort = "xhigh"`.
-- Ignore upstream `tools`, `disallowedTools`, `permissionMode`, `maxTurns`, and
-  `omitClaudeMd` as config fields. Translate their intent into normal Codex
-  instructions or sandbox settings when needed.
-- If named custom agents are unavailable, delegate to built-in Codex
-  `worker` / `explorer` subagents with the same checklist, or run the track
-  inline when delegation is unavailable or unauthorized.
+- Model guidance for this port: upstream Claude family labels map to `gpt-5.5`
+  in bundled `agents/*.md`; normal specialists use `effort: medium` and
+  high-risk security/review or orchestration can use `effort: high`.
+- Ignore upstream `tools`, `disallowedTools`, `permissionMode`, and `maxTurns`
+  as Codex runtime config fields. They remain upstream metadata on bundled
+  agent source files.
+- Drop upstream `omitClaudeMd` during sync. Codex does not document an
+  `omitAgentsMd` replacement for plugin-level agent Markdown.
 
 ## Paths And Environment
 

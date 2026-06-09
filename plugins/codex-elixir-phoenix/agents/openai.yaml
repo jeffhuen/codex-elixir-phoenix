@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Elixir Phoenix"
+  short_description: "Use Elixir/Phoenix specialists as reference tracks for Codex workflows"
+  default_prompt: "Use Codex Elixir Phoenix agents as specialist checklists for Elixir, Phoenix, LiveView, Ecto, Ash, Oban, security, testing, and deployment work."

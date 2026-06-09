@@ -6,7 +6,7 @@ Use this checklist when merging updates from
 ## Diff Strategy
 
 Do not blindly merge upstream. Treat upstream as source material and port by
-area.
+surface.
 
 1. Fetch or inspect the upstream release/tag/PR/commit.
 2. Compare the last ported upstream version to the new upstream target.
@@ -18,18 +18,19 @@ area.
    - Manifests and marketplace metadata
    - Tests and support scripts
    - README or release notes
-4. Apply changes selectively, then run the conversion and validation gates below.
+4. Apply the scoped conversion rules below, then run validation.
 
 ## Merge
 
 Merge these when applicable:
 
-- `plugins/codex-elixir-phoenix/skills/**` content, references, scripts, and
-  tests that still apply to Elixir/Phoenix/Ash/Oban workflows.
-- `plugins/codex-elixir-phoenix/agent-sources/*.md` as upstream source files for
-  specialist behavior.
-- `plugins/codex-elixir-phoenix/hooks/scripts/**` behavior after checking it
-  still works with Codex hook payloads and environment variables.
+- `plugins/elixir-phoenix/skills/**` into
+  `plugins/codex-elixir-phoenix/skills/**`, after applying Codex skill
+  transforms.
+- `plugins/elixir-phoenix/agents/*.md` into
+  `plugins/codex-elixir-phoenix/agents/*.md`, after applying model transforms.
+- Upstream hook script behavior only after checking it still works with Codex
+  hook payloads and environment variables.
 - New upstream test fixtures or smoke tests if they remain useful in this repo.
 - Release-note features such as Ash skills, filters, freeze behavior, or
   specialist checklists, after translating Claude-specific surfaces.
@@ -41,15 +42,20 @@ Do not overwrite these Codex-owned surfaces without an explicit reason:
 - `plugins/codex-elixir-phoenix/.codex-plugin/plugin.json`
 - `.agents/plugins/marketplace.json`
 - `README.md` install commands for `jeffhuen/codex-elixir-phoenix`
+- `plugins/codex-elixir-phoenix/agents/openai.yaml`
 - `plugins/codex-elixir-phoenix/skills/codex-compat/**`
-- `plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs`
-- `plugins/codex-elixir-phoenix/tools/install-codex-agents.sh`
-- `plugins/codex-elixir-phoenix/.codex/agents/*.toml` by hand
 - `plugins/codex-elixir-phoenix/hooks/hooks.json`
 
-Do not restore upstream-only identifiers such as Claude slash-command
-requirements, Claude model names, Anthropic SDK/package requirements, or
-upstream repository install URLs as Codex runtime instructions.
+Do not restore upstream-only package metadata or runtime assumptions:
+
+- `plugins/codex-elixir-phoenix/.claude-plugin/**`
+- `plugins/codex-elixir-phoenix/agent-sources/**`
+- generated Codex agent TOML
+- agent TOML generator or installer scripts
+- Claude slash-command runtime assumptions
+- Claude model family labels
+- Anthropic SDK/package requirements
+- upstream repository install URLs
 
 ## Codex Vs Claude Translation
 
@@ -59,12 +65,16 @@ tooling change.
 | Upstream Claude concept | Codex port rule |
 |-------------------------|-----------------|
 | Slash command file | Convert to a Codex plugin skill or skill instruction. Do not ship Claude slash-command runtime assumptions. |
+| Slash command invocation such as `/phx:review` | Convert user-facing text to `$phx-review`. |
+| `${CLAUDE_SKILL_DIR}` | Convert to `<skill-dir>` in skill instructions. |
+| `CLAUDE.md` project install target | Convert runtime install guidance to `AGENTS.md`; preserve `.claude/` artifact directories when they are normal workflow output paths. |
 | Claude `Task` tool | Treat as Codex subagent delegation only when the current run explicitly authorizes subagents; otherwise run the track inline. |
-| Claude named agent Markdown | Keep as source in `agent-sources/*.md`, then generate optional custom-agent TOML with `tools/generate-codex-agents.mjs`. Do not expose upstream Claude agents as Codex skills. |
-| Claude `Agent(subagent_type: "...")` examples | Treat as pseudocode. Use the matching named Codex custom agent when installed and exposed, use built-in `worker` / `explorer` fallback when delegation is explicitly authorized, or run the track inline. |
-| Claude namespaces such as `elixir-phoenix:security-analyzer` | Drop the namespace in Codex custom-agent names. |
-| Claude model labels | Never ship as runtime model config. Convert through the model table below. |
-| `tools`, `disallowedTools`, `permissionMode`, `maxTurns`, `omitClaudeMd` | Do not put these in Codex TOML. Translate intent into instructions, `sandbox_mode`, or omit. |
+| Claude named agent Markdown | Keep as source in `agents/*.md` with normalized model metadata. Do not expose upstream Claude agents as Codex skills and do not generate Codex agent TOML. |
+| Claude `Agent(subagent_type: "...")` examples | Treat as pseudocode. Read `agents/<name>.md` and run that checklist inline, or delegate to built-in `worker` / `explorer` only when delegation is explicitly authorized. |
+| Claude namespaces such as `elixir-phoenix:security-analyzer` | Drop the namespace in Codex instructions; refer to `security-analyzer` and the matching `agents/security-analyzer.md` checklist. |
+| Claude model labels | Never ship `sonnet`, `haiku`, or `opus`; convert through the model table below. |
+| `tools`, `disallowedTools`, `permissionMode`, `maxTurns` | These may remain as upstream source metadata in `agents/*.md`; do not treat them as Codex runtime config. |
+| `omitClaudeMd` | Drop this Claude-only field from Codex agent Markdown. Do not rename it to `omitAgentsMd`; that field is not documented for Codex plugin-level agents. |
 | Claude hook `if` filters | Codex uses event `matcher` regex plus script-level gates. |
 | Claude `PostToolUseFailure` or `StopFailure` | Codex has no direct event for these names. Model with supported events plus payload/status checks, or omit. |
 | Claude async hook command | Codex parses `async` but skips async command hooks today. Use synchronous command hooks only. |
@@ -72,18 +82,15 @@ tooling change.
 
 ## Model Mapping
 
-Codex custom agents use `model` and `model_reasoning_effort`; Claude family
-labels do not belong in generated TOML or runtime instructions.
+Normalize model labels in `plugins/codex-elixir-phoenix/agents/*.md` and any
+user-facing skill/reference text.
 
-| Upstream intent | Codex model fields |
-|-----------------|--------------------|
-| Upstream `sonnet`, `haiku`, or default specialist work | `model = "gpt-5.5"`, `model_reasoning_effort = "medium"` |
-| Upstream `opus`, security, deep review, orchestrator, or high-risk design | `model = "gpt-5.5"`, `model_reasoning_effort = "xhigh"` when the source intent warrants extra reasoning; otherwise keep `"medium"` |
-| Explicit GPT-5.4 workflow pin | `model = "gpt-5.4"` only when preserving an intentional Codex-side pin |
-
-Update `plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs` when a
-new upstream model label appears. Then regenerate and run
-`tests/codex-agents_test.sh`.
+| Upstream label or intent | Codex fields |
+|--------------------------|--------------|
+| `model: sonnet` | `model: gpt-5.5`, `effort: medium` |
+| `model: haiku` | `model: gpt-5.5`, `effort: medium` |
+| `model: opus` | `model: gpt-5.5`; preserve upstream `effort: high` for high-risk/review/orchestration agents unless the port has a reason to lower it |
+| Body text mentioning `sonnet`, `haiku`, or `opus` | Rewrite to explicit `gpt-5.5` wording, for example `` `gpt-5.5` medium `` |
 
 ## Skills
 
@@ -91,55 +98,41 @@ new upstream model label appears. Then regenerate and run
   trigger-focused `description`.
 - Convert literal upstream slash commands like `/phx:review` to Codex skill
   references such as `$phx-review` where the text is user-facing.
-- It is acceptable for plugin references to mention `.claude/` working
-  directories because this port preserves upstream project artifact conventions.
-- If upstream adds a new command, prefer creating or updating a Codex plugin skill
-  rather than copying slash-command files.
+- Convert `${CLAUDE_SKILL_DIR}` to `<skill-dir>`.
+- Convert `CLAUDE.md` project installation instructions to `AGENTS.md`.
+- Keep `.claude/` artifact paths when they are workflow output directories
+  such as plans, reviews, or audit reports.
+- Convert named-agent instructions to "read `agents/<name>.md` and run that
+  checklist inline or with authorized Codex subagents."
 - Keep `plugins/codex-elixir-phoenix/skills/codex-compat/SKILL.md` current when
   new upstream terminology needs Codex mapping.
 
 ## Agents
 
-Upstream agents are Claude Markdown sources stored under `agent-sources/`.
-In this Codex port they produce one generated artifact:
+Upstream agents are Claude Markdown sources stored under `agents/`. In this
+Codex port they remain under `plugins/codex-elixir-phoenix/agents/*.md` as
+bundled specialist checklists and source material.
 
-- Optional generated custom-agent TOML under `.codex/agents/` for projects or
-  Codex builds that support named custom-agent routing.
+They must not be converted into `skills/` entries, and they must not be
+converted into plugin-bundled Codex agent TOML.
 
-They must not be converted into `skills/` entries. The reliable
-plugin-distributed surface is the upstream workflow skills plus Codex-owned
-compatibility skills.
-
-Keep plugin-level `agents/` reserved for Codex-native companion prompts such as
-`*-agent.md`. Do not place upstream Claude agent files there; they contain
-Claude-only frontmatter and runtime assumptions.
-
-1. Merge upstream agent changes into `plugins/codex-elixir-phoenix/agent-sources/*.md`.
+1. Replace or merge upstream agent changes from
+   `plugins/elixir-phoenix/agents/*.md` into
+   `plugins/codex-elixir-phoenix/agents/*.md`.
 2. Preserve useful specialist body instructions.
-3. Map Claude model labels through
-   `plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs`:
-   - `sonnet`, `haiku`, and default specialist work -> `gpt-5.5`
-   - `opus` and other high-risk specialist work -> `gpt-5.5`
-   - high-risk/security/orchestrator agents -> `model_reasoning_effort = "xhigh"`
-   - normal specialists -> `model_reasoning_effort = "medium"`
-4. Run:
-
-```bash
-node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
-```
-
-5. Codex custom agent TOML requires `name`, `description`, and
-   `developer_instructions`. Optional Codex fields include `model`,
-   `model_reasoning_effort`, `sandbox_mode`, `mcp_servers`, and
-   `skills.config`.
-6. Plugin install packages `.codex/agents/*.toml`, but Codex discovers named
-   custom agents from project `.codex/agents/` or personal `~/.codex/agents/`.
-   Keep `$phx-init` and `tools/install-codex-agents.sh` responsible for
-   installing project-scoped copies.
-7. Never hand-edit `.codex/agents/*.toml`.
-8. Generated agent instructions must not contain runtime Claude model labels,
-   Anthropic attribution, `permissionMode`, `maxTurns`, or Claude tool
-   metadata.
+3. Normalize model labels:
+   - `model: sonnet` -> `model: gpt-5.5`, `effort: medium`
+   - `model: haiku` -> `model: gpt-5.5`, `effort: medium`
+   - `model: opus` -> `model: gpt-5.5`; usually keep `effort: high`
+4. Rewrite body mentions of Claude model family names to explicit `gpt-5.5`
+   wording.
+5. Drop `omitClaudeMd` from frontmatter instead of renaming it to
+   `omitAgentsMd`.
+6. Keep `plugins/codex-elixir-phoenix/agents/openai.yaml` present with
+   plugin-level interface metadata for the agents folder.
+7. Preserve upstream source metadata such as `tools`, `disallowedTools`,
+   `permissionMode`, and `maxTurns` as non-runtime source metadata unless it
+   causes Codex validation issues.
 
 ## Hooks
 
@@ -182,18 +175,43 @@ Upstream Claude hook manifests are not Codex hook manifests.
 - Bump `.codex-plugin/plugin.json` version with a fresh
   `+codex.<YYYYMMDDHHMMSS>` cachebuster whenever packaged files change.
 - Do not add unsupported manifest fields just to mirror upstream.
+- Do not keep `.claude-plugin/` inside the packaged Codex plugin.
 
 ## Validation
 
 Run these after every upstream sync:
 
 ```bash
-node plugins/codex-elixir-phoenix/tools/generate-codex-agents.mjs
-bash plugins/codex-elixir-phoenix/tests/codex-agents_test.sh
-bash plugins/codex-elixir-phoenix/tests/install-codex-agents_test.sh
-.agents/skills/upstream-sync/scripts/validate.sh
+python3 /Users/jeffhuen/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py plugins/codex-elixir-phoenix
 node -e 'JSON.parse(require("fs").readFileSync("plugins/codex-elixir-phoenix/.codex-plugin/plugin.json","utf8")); JSON.parse(require("fs").readFileSync(".agents/plugins/marketplace.json","utf8")); console.log("json ok")'
 find plugins/codex-elixir-phoenix/hooks/scripts -name '*.sh' -type f -exec bash -n {} \;
+bash plugins/codex-elixir-phoenix/hooks/tests/block-dangerous-ops_test.sh
+.agents/skills/upstream-sync/scripts/validate.sh
+```
+
+Run count and stale-reference checks:
+
+```bash
+find plugins/codex-elixir-phoenix/skills -mindepth 2 -maxdepth 2 -name SKILL.md | wc -l
+find plugins/codex-elixir-phoenix/agents -maxdepth 1 -name '*.md' | wc -l
+test -f plugins/codex-elixir-phoenix/agents/openai.yaml
+test ! -d plugins/codex-elixir-phoenix/agent-sources
+test ! -d plugins/codex-elixir-phoenix/.claude-plugin
+rg -n '\b(sonnet|haiku|opus)\b|agent-sources|generate-.+agents|install-.+agents|agents-only|generated Codex agent' README.md plugins/codex-elixir-phoenix
+```
+
+Current expected counts are 48 plugin skills and 25 bundled agent Markdown
+files unless upstream intentionally adds or removes entries.
+
+Run a fresh install smoke test when package layout changes:
+
+```bash
+tmp=$(mktemp -d /private/tmp/codex-plugin-sync-test.XXXXXX)
+mkdir -p "$tmp/.codex"
+HOME="$tmp" CODEX_HOME="$tmp/.codex" codex plugin marketplace add /path/to/codex-elixir-phoenix
+HOME="$tmp" CODEX_HOME="$tmp/.codex" codex plugin add codex-elixir-phoenix@codex-elixir-phoenix
+find "$tmp/.codex/plugins/cache" -path '*/agents/*.md' -type f | wc -l
+find "$tmp/.codex/plugins/cache" -path '*/skills/*/SKILL.md' -type f | wc -l
 ```
 
 Use `bash -n` for individual hook scripts because several use Bash-only syntax
@@ -201,27 +219,14 @@ such as process substitution. Keep `hooks/hooks.json` launcher commands
 POSIX-compatible and let `hooks/scripts/run-hook.sh` exec Bash for the actual
 script.
 
-Run a fresh install smoke test:
-
-```bash
-tmp=$(mktemp -d /private/tmp/codex-plugin-sync-test.XXXXXX)
-mkdir -p "$tmp/.codex"
-HOME="$tmp" CODEX_HOME="$tmp/.codex" codex plugin marketplace add /path/to/codex-elixir-phoenix
-HOME="$tmp" CODEX_HOME="$tmp/.codex" codex plugin add codex-elixir-phoenix@codex-elixir-phoenix
-find "$tmp/.codex/plugins/cache" -path '*/.codex/agents/*.toml' -type f | wc -l
-```
-
-The expected agent count is currently 25 unless upstream adds or removes
-agents and the test is intentionally updated.
-
 ## Final Review
 
 Before committing:
 
 - `git diff` should show intentional upstream content changes plus Codex
   conversion changes.
-- `rg -ni '@anthropic-ai|anthropic|\b(sonnet|opus|haiku)\b'` should find no
-  runtime instructions outside source Markdown or explicit mapping code.
-- No generated Codex agent should contain Claude frontmatter keys.
+- No packaged Codex runtime instructions should contain Claude model family
+  labels.
+- No generated Codex agent TOML path or generator should be present.
 - Hook changes should not introduce `hook exited with code 127` risks.
 - Mention any upstream feature intentionally skipped and why.

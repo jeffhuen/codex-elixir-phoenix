@@ -19,15 +19,16 @@ grep -q 'conversion-checklist.md' "$SKILL" || fail "skill must point to conversi
 
 for required in \
   'Do not blindly merge upstream' \
-  'tools/generate-codex-agents.mjs' \
-  'tests/codex-agents_test.sh' \
+  'agents/openai.yaml' \
+  'plugins/codex-elixir-phoenix/agents/*.md' \
+  'do not generate Codex agent TOML' \
   '.agents/skills/upstream-sync/scripts/validate.sh' \
   'hooks/hooks.json' \
   'Codex Vs Claude Translation' \
-  'agent-sources' \
   'Do not expose upstream Claude agents as Codex skills' \
+  'Do not rename it to `omitAgentsMd`' \
   'Model Mapping' \
-  'model_reasoning_effort' \
+  'gpt-5.5' \
   'PermissionRequest' \
   'SubagentStart' \
   'SubagentStop' \
@@ -38,11 +39,16 @@ for required in \
   'cachebuster' \
   'codex plugin marketplace add'
 do
-  grep -q "$required" "$REFERENCE" || fail "checklist missing: $required"
+  grep -Fq "$required" "$REFERENCE" || fail "checklist missing: $required"
 done
 
-if grep -Eq 'generate-agent-skills|agent-skills_test' "$SKILL" "$REFERENCE"; then
-  fail "checklist must not reference removed agent skill wrapper generation"
+if grep -Eq 'generate-agent-skills|agent-skills_test|generate-codex-agents|install-codex-agents|codex-agents_test|generated custom agents' "$SKILL" "$REFERENCE"; then
+  fail "checklist must not reference removed agent generation paths"
+fi
+
+if [ -d "$ROOT/plugins/codex-elixir-phoenix/agents" ] && \
+  grep -R -n -E 'omitClaudeMd|omitAgentsMd' "$ROOT/plugins/codex-elixir-phoenix/agents" >/dev/null; then
+  fail "agent frontmatter must drop omitClaudeMd and must not invent omitAgentsMd"
 fi
 
 echo "upstream-sync validate: guardrails verified"

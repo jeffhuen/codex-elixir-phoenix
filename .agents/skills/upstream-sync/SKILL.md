@@ -1,6 +1,6 @@
 ---
 name: upstream-sync
-description: "Use when updating this repository from oliver-kriska/claude-elixir-phoenix releases, tags, PRs, or commits; merge upstream Claude changes while preserving this Codex port's plugin names, hooks, skills, generated custom agents, install docs, tests, and cachebuster rules."
+description: "Use when updating this repository from oliver-kriska/claude-elixir-phoenix releases, tags, PRs, or commits; port upstream skills and agents while preserving Codex plugin metadata, hooks, install docs, tests, and cachebuster rules."
 ---
 
 # Upstream Sync
@@ -25,8 +25,11 @@ gates must pass.
    manifests, docs, and tests.
 3. Before editing hooks or agents, apply the Codex-vs-Claude translation tables
    in the conversion checklist.
-4. Apply upstream changes selectively using the conversion checklist.
-5. Regenerate generated Codex artifacts, especially `.codex/agents/*.toml`.
+4. Apply upstream `skills/**` and `agents/**` changes using the scoped
+   conversion checklist. Preserve `agents/openai.yaml`.
+5. Keep hooks as the Codex-owned port. When upstream hooks change, port behavior
+   into the existing Codex hook manifest/scripts instead of copying Claude hook
+   manifests.
 6. Run all checklist validation commands.
 7. Bump `plugins/codex-elixir-phoenix/.codex-plugin/plugin.json` with a new
    `+codex.<timestamp>` cachebuster only when packaged plugin files change.
@@ -37,13 +40,15 @@ gates must pass.
 
 - Do not blindly merge upstream into `main`.
 - Do not copy Claude hook manifests into `plugins/codex-elixir-phoenix/hooks/hooks.json`.
-- Do not hand-edit `.codex/agents/*.toml`; edit `agent-sources/*.md` and run
-  `tools/generate-codex-agents.mjs`.
+- Do not generate Codex agent TOML for this plugin; plugin-bundled Codex agent
+  TOML is not supported here.
+- Do not recreate `agent-sources/`; upstream agents live at
+  `plugins/codex-elixir-phoenix/agents/*.md`.
 - Do not rename the Codex plugin, marketplace, homepage, or repository back to
   upstream Claude values.
 - Do not drop Codex compatibility assets: `skills/codex-compat/`,
-  `tools/generate-codex-agents.mjs`, `tools/install-codex-agents.sh`, tests,
-  README install instructions, or the GitHub-backed marketplace layout.
+  `agents/openai.yaml`, README install instructions, tests, or the
+  GitHub-backed marketplace layout.
 - When upstream changes Claude hooks, agents, subagents, tools, or model
   labels, update both this repo skill and the shipped `codex-compat` skill if
   the translation rules changed.

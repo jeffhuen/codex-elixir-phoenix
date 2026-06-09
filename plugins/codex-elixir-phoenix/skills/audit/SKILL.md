@@ -36,10 +36,10 @@ $phx-audit --since HEAD~10  # Audit last 10 commits
 ## Specialist Routing
 
 Run five review tracks. If Codex subagent tools are available and the user/task
-explicitly authorizes delegation, run independent tracks in parallel. When the
-current Codex surface exposes named custom agents, use the preferred routes
-below. Otherwise use focused generic subagents, or run the same tracks
-sequentially and label the limitation in the report.
+explicitly authorizes delegation, run independent tracks in parallel. Use the
+preferred specialist checklist from `agents/<name>.md` when one exists.
+Otherwise use focused generic subagents, or run the same tracks sequentially
+and label the limitation in the report.
 
 | Track | Focus | Output File | Preferred Route |
 |-------|-------|-------------|-----------------|
@@ -64,7 +64,7 @@ Mark a track completed when its report is written.
 For each track, write findings to `.claude/audit/reports/{track}.md`.
 Prompt each track with its focus and the relevant directories/files. If using
 subagents, make each prompt bounded, give it one output file, and use the
-preferred route from the table above when named custom agents are available.
+preferred checklist from the table above.
 
 ```
 Architecture: module structure, context boundaries, coupling, cohesion.
@@ -74,7 +74,7 @@ Tests: coverage, quality, flakes.
 Dependencies: vulnerabilities, outdated packages, unused deps.
 ```
 
-Requested subagent routing when named custom agents are available:
+Requested specialist routing:
 
 ```
 phoenix-patterns-analyst -> Architecture audit, arch-review.md
@@ -85,11 +85,11 @@ general-purpose          -> Dependency audit, deps-audit.md
 ```
 
 **Why specialist routing matters**: generic subagents inherit the parent
-session model. Codex custom agents can declare their own model and effort, so
-routing Architecture and Test Health to `gpt-5.5` medium agents avoids
-unnecessary parent-effort subagent volume. Security intentionally stays on the
-`gpt-5.5` xhigh agent. Performance and Dependencies remain generic until this
-plugin has project-wide specialists for those tracks.
+session context. The bundled `agents/*.md` checklists preserve the upstream
+specialist scope and model intent. Security intentionally uses the
+`security-analyzer` checklist with `gpt-5.5` xhigh intent. Performance and
+Dependencies remain generic until this plugin has project-wide specialists for
+those tracks.
 
 Prompts must be focused. Scope each prompt to the
 relevant directories and patterns. Do NOT give vague prompts
