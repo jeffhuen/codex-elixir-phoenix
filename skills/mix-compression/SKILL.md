@@ -27,7 +27,7 @@ while preserving full failure blocks, compile errors, and stack traces. Net win:
    `== Compilation error in`), test failures (`FAILURES`, `0 failures` — preserved
    even on short-circuit), dialyzer warnings, and stack traces with `file:line` MUST
    pass through unchanged
-2. **Verify after install** — run `rtk test mix-test` (or any filter name) to
+2. **Verify after install** — run `rtk verify` (or `rtk verify --filter mix-test`) to
    confirm the bundled test fixtures pass before declaring success
 3. **Never overwrite existing `.rtk/filters.toml`** — diff and merge instead
 
@@ -44,7 +44,7 @@ homebrew install + shell hook setup.
 
 ### Step 2: Seed `.rtk/filters.toml`
 
-Reference filters live at `<skill-dir>/references/rtk-filters.toml`. Six
+Reference filters live at `<skill-dir>/references/rtk-filters.toml`. Eight
 production-tested filters covering:
 
 - **`mix-test`** — short-circuits all-pass, preserves failure blocks + compile errors
@@ -53,6 +53,8 @@ production-tested filters covering:
 - **`mix-deps-get`** — collapses unchanged package lists
 - **`mix-ecto-migrate`** — strips compile prefix, short-circuits "already up"
 - **`mix-compile`** — handles parallel worker prefixes (`N>`) and MIX_ENV
+- **`mix-ash-codegen`** — preserves Ash snapshot and migration file lists
+- **`mix-ash-migrate`** — preserves Ash migration steps while stripping compile noise
 
 Run this if the project has no `.rtk/filters.toml` yet:
 
@@ -67,9 +69,8 @@ the filters they don't already have.
 ### Step 3: Verify filters work
 
 ```bash
-rtk test mix-test    # runs embedded [[tests.mix-test]] fixtures
-rtk test mix-credo
-rtk test mix-dialyzer
+rtk verify                       # runs all embedded [[tests.*]] fixtures
+rtk verify --filter mix-test     # one filter only
 ```
 
 Check that all report "passed". Flag and stop if any fail — usually means the

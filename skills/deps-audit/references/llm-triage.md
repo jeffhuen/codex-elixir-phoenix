@@ -96,7 +96,7 @@ control input size.
 {
   "package": "<pkg>",
   "version": "<version>",
-  "model": "sonnet",
+  "model": "gpt-5.5",
   "summary": "<one-line per-package summary>",
   "verdicts": [
     {

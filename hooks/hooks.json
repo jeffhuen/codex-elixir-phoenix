@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/edit-guard.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" edit-guard.sh'",
             "timeout": 30
           }
         ]
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/bash-failure-guard.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" bash-failure-guard.sh'",
             "timeout": 15
           }
         ]
@@ -28,8 +28,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/bash-guard.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" bash-guard.sh'",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" freeze-gate.sh'",
+            "timeout": 5
           }
         ]
       }
@@ -39,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/inject-iron-laws.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" inject-iron-laws.sh'",
             "timeout": 10
           }
         ]
@@ -51,28 +61,34 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/setup-dirs.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" setup-dirs.sh'",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/detect-tidewave.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" detect-tidewave.sh'",
             "timeout": 30,
             "statusMessage": "Detecting Tidewave..."
           },
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/check-scratchpad.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" detect-ash.sh'",
+            "timeout": 3,
+            "statusMessage": "Detecting Ash..."
+          },
+          {
+            "type": "command",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" check-scratchpad.sh'",
             "timeout": 15
           },
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/check-resume.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" check-resume.sh'",
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/check-branch-freshness.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" check-branch-freshness.sh'",
             "timeout": 30
           }
         ]
@@ -84,7 +100,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/precompact-rules.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" precompact-rules.sh'",
             "timeout": 15
           }
         ]
@@ -95,7 +111,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/postcompact-verify.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" postcompact-verify.sh'",
             "timeout": 15
           }
         ]
@@ -106,7 +122,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'exec /bin/bash \"$PLUGIN_ROOT/hooks/scripts/check-pending-plans.sh\"'",
+            "command": "/bin/sh -c 'root=\"${PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CODEX_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || root=\"${CLAUDE_PLUGIN_ROOT:-}\"; [ -n \"$root\" ] || exit 0; runner=\"$root/hooks/scripts/run-hook.sh\"; [ -r \"$runner\" ] || exit 0; exec /bin/sh \"$runner\" check-pending-plans.sh'",
             "timeout": 15
           }
         ]

@@ -16,6 +16,7 @@ COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
 [[ -n "$COMMAND" ]] || exit 0
 
 proj="$(printf '%s' "$INPUT" | jq -r '.cwd // empty' 2>/dev/null)"
+[ -n "$proj" ] || proj="${CLAUDE_PROJECT_DIR:-}"
 [ -n "$proj" ] || proj="$PWD"
 is_elixir=0
 [ -f "$proj/mix.exs" ] && is_elixir=1

@@ -482,8 +482,8 @@ change inside `emit()`.
   `yara -r priv/yara/` run alongside native rules when available; both
   are soft deps. See `semgrep.md` and `yara.md`.
 - **LLM triage** — high-score packages get verdicts via the
-  `hex-deps-triager` sonnet agent with a `context-supervisor` (haiku)
-  consolidating per-package output. See `llm-triage.md`.
+  `hex-deps-triager` (`gpt-5.5` medium) agent with a `context-supervisor`
+  (`gpt-5.5` medium) consolidating per-package output. See `llm-triage.md`.
 
 ## Out of scope (Phase 3+)
 

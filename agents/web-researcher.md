@@ -4,8 +4,8 @@ description: Fetches and extracts information from web sources efficiently. Opti
 tools: WebSearch, WebFetch
 disallowedTools: Write, Edit, NotebookEdit, Bash
 permissionMode: bypassPermissions
-model: haiku
-effort: low
+model: gpt-5.5
+effort: medium
 maxTurns: 10
 omitClaudeMd: true
 ---

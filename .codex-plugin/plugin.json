@@ -1,6 +1,6 @@
 {
   "name": "codex-elixir-phoenix",
-  "version": "2.10.5+codex.20260603203542",
+  "version": "2.11.0+codex.20260608172919",
   "description": "Elixir/Phoenix/LiveView development with specialist workflows, Iron Laws, hooks, and Tidewave MCP guidance.",
   "author": {
     "name": "Oliver Kriska",
@@ -17,13 +17,15 @@
     "ecto",
     "oban",
     "otp",
-    "tidewave"
+    "tidewave",
+    "ash"
   ],
   "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Codex Elixir Phoenix",
-    "shortDescription": "Elixir, Phoenix, LiveView, Ecto, Oban, and OTP workflows for Codex.",
-    "longDescription": "A Codex-compatible port of Oliver Kriska's Claude Elixir/Phoenix plugin. It bundles focused skills for planning, review, verification, debugging, dependency auditing, LiveView patterns, Ecto patterns, Oban, deployment, and security, plus lifecycle hooks adapted to Codex's hook contract.",
+    "shortDescription": "Elixir, Phoenix, LiveView, Ecto, Ash, Oban, and OTP workflows for Codex.",
+    "longDescription": "A Codex-compatible port of Oliver Kriska's Claude Elixir/Phoenix plugin. It bundles focused skills for planning, review, verification, debugging, dependency auditing, LiveView patterns, Ecto and Ash patterns, Oban, deployment, and security, plus lifecycle hooks adapted to Codex's hook contract.",
     "developerName": "Oliver Kriska",
     "category": "Development",
     "capabilities": [
@@ -31,7 +33,8 @@
       "Phoenix",
       "LiveView",
       "Code Review",
-      "Lifecycle Hooks"
+      "Lifecycle Hooks",
+      "Ash"
     ],
     "defaultPrompt": [
       "Use Codex Elixir Phoenix to review this Phoenix change.",

@@ -9,7 +9,7 @@ hook_project_dir() {
     cwd=$(printf '%s' "$input" | jq -r '.cwd // empty' 2>/dev/null)
   fi
 
-  printf '%s\n' "${cwd:-${PWD}}"
+  printf '%s\n' "${cwd:-${CLAUDE_PROJECT_DIR:-${PWD}}}"
 }
 
 hook_tool_file_paths() {

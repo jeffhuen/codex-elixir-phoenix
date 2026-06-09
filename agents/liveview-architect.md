@@ -4,7 +4,7 @@ description: LiveView architecture specialist - component structure, real-time p
 tools: Read, Grep, Glob
 disallowedTools: Write, Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 maxTurns: 15
 omitClaudeMd: true

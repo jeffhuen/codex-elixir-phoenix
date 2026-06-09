@@ -1,6 +1,6 @@
 ---
 name: narrow-bare-rescue
-description: "Use when auditing or refactoring Elixir bare rescue clauses, swallowed exceptions, secure error handling, or rescue patterns that hide typos and UndefinedFunctionError."
+description: "Narrow bare rescue in Elixir so real errors like KeyError and typos propagate instead of being swallowed. Use to audit rescues and refactor error handling."
 ---
 
 

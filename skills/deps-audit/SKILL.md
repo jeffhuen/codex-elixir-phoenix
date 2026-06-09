@@ -134,9 +134,9 @@ at full severity. See `<skill-dir>/references/differential.md`.
 ### Step 5.8: LLM triage (when score > threshold)
 
 For packages where the aggregate score exceeds 10, the
-`hex-deps-triager` sonnet agent reads finding + diff windows and
+`hex-deps-triager` (`gpt-5.5` medium) agent reads finding + diff windows and
 produces structured verdicts (`confidence`, `verdict`, `rationale`,
-`fp_reasons[]`). A `context-supervisor` (haiku) consolidates verdicts
+`fp_reasons[]`). A `context-supervisor` (`gpt-5.5` medium) consolidates verdicts
 across packages into `triage/consolidated.md`. Main skill reads only
 the consolidated file.
 

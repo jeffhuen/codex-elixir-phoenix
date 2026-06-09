@@ -4,7 +4,7 @@ description: OTP patterns specialist - GenServer, Supervisor, Agent, Task, Regis
 tools: Read, Grep, Glob, Bash
 disallowedTools: Write, Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 maxTurns: 15
 omitClaudeMd: true

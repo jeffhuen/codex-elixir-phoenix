@@ -4,8 +4,8 @@ description: Orchestrates feature planning by coordinating specialized agents. I
 tools: Read, Write, Grep, Glob, Agent
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: opus
-effort: high
+model: gpt-5.5
+effort: xhigh
 maxTurns: 40
 memory: project
 skills:
@@ -87,7 +87,7 @@ Always spawn:
 Spawn if evaluating NEW libraries (not in mix.exs):
 +-- hex-library-researcher -> .claude/plans/{slug}/research/libraries.md
 
-Spawn if unfamiliar tech or need community input (haiku — cheap):
+Spawn if unfamiliar tech or need community input (`gpt-5.5` medium):
 +-- web-researcher -> .claude/plans/{slug}/research/research-{topic}.md
     Pass focused query or URLs, NEVER raw description. Multiple topics
     → multiple parallel agents.

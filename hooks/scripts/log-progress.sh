@@ -11,10 +11,10 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "${SCRIPT_DIR}/codex-hook-utils.sh"
 
-proj="$(hook_project_dir)"
+INPUT=$(cat)
+proj="$(hook_project_dir "$INPUT")"
 [ -f "$proj/mix.exs" ] || exit 0
 
-INPUT=$(cat)
 PLUGIN_METRICS_DIR="${PLUGIN_DATA:-${CLAUDE_PLUGIN_DATA:-}}"
 [[ -n "$PLUGIN_METRICS_DIR" ]] || exit 0
 

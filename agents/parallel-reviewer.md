@@ -4,8 +4,8 @@ description: Parallel code review using 4 specialist agents (elixir-reviewer, se
 tools: Read, Grep, Glob, Bash, Agent, Write
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: opus
-effort: high
+model: gpt-5.5
+effort: xhigh
 omitClaudeMd: true
 maxTurns: 25
 skills:

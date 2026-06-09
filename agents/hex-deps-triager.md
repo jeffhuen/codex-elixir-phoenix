@@ -1,10 +1,10 @@
 ---
 name: hex-deps-triager
-description: Triage supply-chain security audit findings for a Hex package version in Elixir/Phoenix projects — review diff windows + metadata, output structured verdicts. Use when /phx:deps-audit score > threshold.
+description: Triage Hex supply-chain audit findings in Elixir/Phoenix — review diff windows and metadata to produce structured security verdicts. Use after /phx:deps-audit.
 tools: Read, Grep, Glob, Bash, Write
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 maxTurns: 12
 omitClaudeMd: true
@@ -82,7 +82,7 @@ Write JSON to the path given by `$OUTPUT_FILE` (or `/tmp/triage-<pkg>.json`):
 {
   "package": "phoenix_extras",
   "version": "0.2.0",
-  "model": "sonnet",
+  "model": "gpt-5.5",
   "summary": "1 critical: new compile-time System.cmd hitting an external URL. New maintainer (1 month old, 0 recent downloads) raises base rate.",
   "verdicts": [
     {

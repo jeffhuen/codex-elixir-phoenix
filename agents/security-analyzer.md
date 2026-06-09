@@ -4,8 +4,8 @@ description: Security audit specialist for Elixir/Phoenix - authentication, auth
 tools: Read, Grep, Glob, Write
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: opus
-effort: high
+model: gpt-5.5
+effort: xhigh
 maxTurns: 25
 omitClaudeMd: true
 skills:

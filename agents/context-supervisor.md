@@ -4,8 +4,8 @@ description: Compresses multi-agent output into consolidated summaries to preven
 tools: Read, Grep, Glob, Write
 disallowedTools: Edit, NotebookEdit, Bash, Agent
 permissionMode: bypassPermissions
-model: haiku
-effort: low
+model: gpt-5.5
+effort: medium
 maxTurns: 10
 ---
 

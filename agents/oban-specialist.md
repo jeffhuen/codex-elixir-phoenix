@@ -4,7 +4,7 @@ description: Oban worker specialist - reviews idempotency, error handling, and p
 tools: Read, Grep, Glob, Write
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 maxTurns: 25
 omitClaudeMd: true

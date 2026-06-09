@@ -4,7 +4,7 @@ description: Analyzes codebase for existing Phoenix patterns, contexts, module s
 tools: Read, Write, Grep, Glob, Bash
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 maxTurns: 15
 memory: project

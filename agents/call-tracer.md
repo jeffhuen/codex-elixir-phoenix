@@ -4,7 +4,7 @@ description: Orchestrates parallel call tree tracing using subagents for each en
 tools: Read, Grep, Glob, Bash, Agent
 disallowedTools: Write, Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 omitClaudeMd: true
 maxTurns: 25

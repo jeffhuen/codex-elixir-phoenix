@@ -33,19 +33,21 @@ $phx-audit --since HEAD~10  # Audit last 10 commits
 3. **Never compare scores across projects** — Scoring methodology depends on project size and maturity; only track trends within the same project
 4. **Quick mode before full mode** — Run `--quick` first to catch compile/test failures before spending tokens on five full review tracks
 
-## Review Track Architecture
+## Specialist Routing
 
 Run five review tracks. If Codex subagent tools are available and the user/task
-explicitly authorizes delegation, run independent tracks in parallel. Otherwise
-perform the same tracks sequentially and label the limitation in the report.
+explicitly authorizes delegation, run independent tracks in parallel. When the
+current Codex surface exposes named custom agents, use the preferred routes
+below. Otherwise use focused generic subagents, or run the same tracks
+sequentially and label the limitation in the report.
 
-| Track | Focus | Output File |
-|-------|-------|-------------|
-| Architecture | Structure quality, coupling, cohesion | `arch-review.md` |
-| Performance | N+1, indexes, bottlenecks, scalability | `perf-audit.md` |
-| Security | OWASP scan, auth patterns, secrets | `security-audit.md` |
-| Test Health | Coverage, quality, flaky tests | `test-audit.md` |
-| Dependencies | Vulnerabilities, outdated, unused | `deps-audit.md` |
+| Track | Focus | Output File | Preferred Route |
+|-------|-------|-------------|-----------------|
+| Architecture | Structure quality, coupling, cohesion | `arch-review.md` | `phoenix-patterns-analyst` (`gpt-5.5` medium) |
+| Performance | N+1, indexes, bottlenecks, scalability | `perf-audit.md` | `general-purpose` (no plugin specialist yet) |
+| Security | OWASP scan, auth patterns, secrets | `security-audit.md` | `security-analyzer` (`gpt-5.5` xhigh) |
+| Test Health | Coverage, quality, flaky tests | `test-audit.md` | `testing-reviewer` (`gpt-5.5` medium) |
+| Dependencies | Vulnerabilities, outdated, unused | `deps-audit.md` | `general-purpose` (per-package `hex-deps-triager` only) |
 
 ## Workflow
 
@@ -61,7 +63,8 @@ Mark a track completed when its report is written.
 
 For each track, write findings to `.claude/audit/reports/{track}.md`.
 Prompt each track with its focus and the relevant directories/files. If using
-subagents, make each prompt bounded and give it one output file.
+subagents, make each prompt bounded, give it one output file, and use the
+preferred route from the table above when named custom agents are available.
 
 ```
 Architecture: module structure, context boundaries, coupling, cohesion.
@@ -70,6 +73,23 @@ Security: OWASP scan, auth patterns, secret leakage.
 Tests: coverage, quality, flakes.
 Dependencies: vulnerabilities, outdated packages, unused deps.
 ```
+
+Requested subagent routing when named custom agents are available:
+
+```
+phoenix-patterns-analyst -> Architecture audit, arch-review.md
+general-purpose          -> Performance audit, perf-audit.md
+security-analyzer        -> Security audit, security-audit.md
+testing-reviewer         -> Test health audit, test-audit.md
+general-purpose          -> Dependency audit, deps-audit.md
+```
+
+**Why specialist routing matters**: generic subagents inherit the parent
+session model. Codex custom agents can declare their own model and effort, so
+routing Architecture and Test Health to `gpt-5.5` medium agents avoids
+unnecessary parent-effort subagent volume. Security intentionally stays on the
+`gpt-5.5` xhigh agent. Performance and Dependencies remain generic until this
+plugin has project-wide specialists for those tracks.
 
 Prompts must be focused. Scope each prompt to the
 relevant directories and patterns. Do NOT give vague prompts

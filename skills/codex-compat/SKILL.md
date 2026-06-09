@@ -43,8 +43,9 @@ instructions in Codex, apply these mappings.
   contains that skill's `SKILL.md`.
 - `.claude/` paths are preserved as the upstream plugin's working convention.
   Do not move them to `.codex/` unless the user asks for a native rewrite.
-- Hook scripts can use `PLUGIN_ROOT` and `PLUGIN_DATA`; Codex also provides
-  `CLAUDE_PLUGIN_ROOT` and `CLAUDE_PLUGIN_DATA` for compatibility.
+- Hook scripts can use `PLUGIN_ROOT`/`CODEX_PLUGIN_ROOT` and `PLUGIN_DATA`;
+  Codex also provides `CLAUDE_PLUGIN_ROOT` and `CLAUDE_PLUGIN_DATA` for
+  compatibility.
 
 ## Hooks
 

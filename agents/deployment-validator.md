@@ -4,7 +4,7 @@ description: Deployment configuration validator - releases, Docker, Kubernetes, 
 tools: Read, Grep, Glob, Bash, Write
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 maxTurns: 25
 omitClaudeMd: true

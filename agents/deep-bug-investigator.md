@@ -4,7 +4,7 @@ description: Deep bug investigation using 4 parallel subagents (reproduction, ro
 tools: Read, Grep, Glob, Bash, Agent
 disallowedTools: Write, Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 omitClaudeMd: true
 maxTurns: 30
@@ -239,7 +239,7 @@ finishes. Read each subagent's output file to collect results. NEVER
 proceed while any subagent is still running.
 
 **When tracks wrote to `output_dir/tracks/`**, spawn a
-context-supervisor (haiku) to compress before synthesis:
+context-supervisor (`gpt-5.5` medium) to compress before synthesis:
 
 ```
 Agent(subagent_type: "elixir-phoenix:context-supervisor",

@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INPUT=$(cat)
 
 # Skip in non-Elixir projects (defense in depth — issue #55)
-proj="$(hook_project_dir)"
+proj="$(hook_project_dir "$INPUT")"
 [ -f "$proj/mix.exs" ] || exit 0
 
 while IFS= read -r FILE_PATH; do

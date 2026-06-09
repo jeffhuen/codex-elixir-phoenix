@@ -4,7 +4,7 @@ description: Cross-check implementation against task requirements (Linear issue,
 tools: Read, Grep, Glob, Bash, Write
 disallowedTools: Edit, NotebookEdit
 permissionMode: bypassPermissions
-model: sonnet
+model: gpt-5.5
 effort: medium
 maxTurns: 20
 omitClaudeMd: true

@@ -4,8 +4,8 @@ description: Orchestrates the full agentic workflow cycle (plan → work → rev
 tools: Read, Write, Grep, Glob, Bash, Agent
 disallowedTools: NotebookEdit
 permissionMode: bypassPermissions
-model: opus
-effort: high
+model: gpt-5.5
+effort: xhigh
 maxTurns: 50
 memory: project
 skills:
