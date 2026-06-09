@@ -1,0 +1,4 @@
+interface:
+  display_name: "OTP Advisor"
+  short_description: "OTP patterns specialist specialist workflow"
+  default_prompt: "Use $otp-advisor to run the OTP Advisor specialist workflow for this Elixir/Phoenix task."

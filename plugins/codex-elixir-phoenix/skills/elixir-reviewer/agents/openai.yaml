@@ -1,0 +1,4 @@
+interface:
+  display_name: "Elixir Reviewer"
+  short_description: "Expert Elixir/Phoenix code reviewer"
+  default_prompt: "Use $elixir-reviewer to run the Elixir Reviewer specialist workflow for this Elixir/Phoenix task."

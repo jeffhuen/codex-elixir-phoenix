@@ -1,0 +1,4 @@
+interface:
+  display_name: "Planning Orchestrator"
+  short_description: "Orchestrates feature planning by coordinating specialized"
+  default_prompt: "Use $planning-orchestrator to run the Planning Orchestrator specialist workflow for this Elixir/Phoenix task."

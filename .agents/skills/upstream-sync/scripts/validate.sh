@@ -24,6 +24,7 @@ for required in \
   '.agents/skills/upstream-sync/scripts/validate.sh' \
   'hooks/hooks.json' \
   'Codex Vs Claude Translation' \
+  'agent-sources' \
   'Model Mapping' \
   'model_reasoning_effort' \
   'PermissionRequest' \

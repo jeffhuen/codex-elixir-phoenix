@@ -1,0 +1,4 @@
+interface:
+  display_name: "Iron Law Judge"
+  short_description: "Checks code for Iron Law violations using pattern analysis"
+  default_prompt: "Use $iron-law-judge to run the Iron Law Judge specialist workflow for this Elixir/Phoenix task."

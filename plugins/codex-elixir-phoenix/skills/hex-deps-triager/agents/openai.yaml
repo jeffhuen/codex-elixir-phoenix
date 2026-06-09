@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hex Deps Triager"
+  short_description: "Triage Hex supply-chain audit findings in Elixir/Phoenix"
+  default_prompt: "Use $hex-deps-triager to run the Hex Deps Triager specialist workflow for this Elixir/Phoenix task."

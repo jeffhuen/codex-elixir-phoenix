@@ -1,0 +1,4 @@
+interface:
+  display_name: "Call Tracer"
+  short_description: "Orchestrates parallel call tree tracing using subagents for"
+  default_prompt: "Use $call-tracer to run the Call Tracer specialist workflow for this Elixir/Phoenix task."

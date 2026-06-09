@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ash Query Optimizer"
+  short_description: "Ash query optimizer specialist workflow"
+  default_prompt: "Use $ash-query-optimizer to run the Ash Query Optimizer specialist workflow for this Elixir/Phoenix task."

@@ -1,13 +1,14 @@
 ---
 name: phx-init
-description: "Use when setting up or updating this Codex Elixir/Phoenix plugin in a project, installing AGENTS.md guidance, installing project-scoped Codex custom agents, or refreshing plugin instruction markers."
+description: "Use when setting up or updating this Codex Elixir/Phoenix plugin in a project, installing AGENTS.md guidance, optionally installing project-scoped Codex custom agents, or refreshing plugin instruction markers."
 ---
 
 
 # Plugin Initialization
 
 Install the Elixir/Phoenix plugin's behavioral instructions into the project's
-AGENTS.md and install Codex custom-agent TOML files into `.codex/agents/`.
+AGENTS.md and optionally install Codex custom-agent TOML files into
+`.codex/agents/`.
 
 ## Usage
 
@@ -59,10 +60,16 @@ Read `mix.exs` and use Grep to extract:
 
 **CRITICAL: NEVER overwrite or delete existing AGENTS.md content outside the plugin markers** — user-written rules, project conventions, and other plugin sections must be preserved verbatim
 
-### Step 4: Install Codex Custom Agents
+### Step 4: Install Optional Codex Custom Agents
 
-Codex custom agents are the native equivalent of upstream Claude agents. The
-generated agent TOML files live in the installed plugin at:
+The primary plugin-distributed equivalent of upstream Claude named agents is the
+generated skill wrapper set, such as `$ash-resource-designer`,
+`$security-analyzer`, and `$verification-runner`. Those are available after
+plugin install.
+
+This optional step installs generated Codex custom-agent TOML files into the
+current project for Codex builds that support project-scoped named custom-agent
+routing. The generated TOML files live in the installed plugin at:
 
 ```
 <skill-dir>/../../.codex/agents/*.toml
@@ -92,7 +99,8 @@ Rules:
    - If the destination exists without either marker, skip it and report a conflict.
 3. Do not edit unrelated files under `.codex/agents/`.
 
-Once installed, Codex can route delegated work to named custom agents such as:
+When the active Codex surface supports named custom-agent routing, these files
+can be used for delegated specialist tracks such as:
 
 - `ash-resource-designer`
 - `ash-policy-reviewer`
@@ -178,13 +186,13 @@ See `<skill-dir>/references/injectable-template.md` for full template with all p
 After running `$phx-init`:
 
 1. Check AGENTS.md contains markers
-2. Verify `.codex/agents/` contains this plugin's generated custom-agent TOML files
+2. If custom agents were installed, verify `.codex/agents/` contains this plugin's generated custom-agent TOML files
 3. Verify detected stack matches actual project
 4. New session should:
    - Auto-detect complexity when given tasks
    - Stop on Iron Law violations
    - Offer relevant workflows based on task
-   - Use named Codex custom agents for delegated specialist tracks when subagents are available
+   - Use generated agent skills for specialist tracks; use named Codex custom agents only when the active surface exposes them
 
 ## Error Handling
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Deep Bug Investigator"
+  short_description: "Deep bug investigation using 4 parallel subagents"
+  default_prompt: "Use $deep-bug-investigator to run the Deep Bug Investigator specialist workflow for this Elixir/Phoenix task."

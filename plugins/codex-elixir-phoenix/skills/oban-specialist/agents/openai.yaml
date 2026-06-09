@@ -1,0 +1,4 @@
+interface:
+  display_name: "Oban Specialist"
+  short_description: "Oban worker specialist specialist workflow"
+  default_prompt: "Use $oban-specialist to run the Oban Specialist specialist workflow for this Elixir/Phoenix task."

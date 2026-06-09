@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC_DIR="$ROOT/agents"
+SRC_DIR="$ROOT/agent-sources"
 OUT_DIR="$ROOT/.codex/agents"
 
 fail() {

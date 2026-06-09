@@ -38,19 +38,27 @@ instructions in Codex, apply these mappings.
 
 ## Subagents And Custom Agents
 
-- Codex subagents are the equivalent of upstream Claude agents.
+- Codex plugin-distributed skills are the reliable equivalent for upstream
+  Claude named agents in this port. Use the generated `$ash-resource-designer`,
+  `$security-analyzer`, `$verification-runner`, and similar agent skills first.
+- Upstream `agent-sources/*.md` files are source material. Generated Codex
+  agent-skill wrappers live under `skills/<agent-name>/SKILL.md`, with skill UI
+  metadata in `skills/<agent-name>/agents/openai.yaml`.
+- Do not put upstream Claude agent sources in the plugin-level `agents/`
+  directory. That directory is reserved for Codex-native companion prompts such
+  as `*-agent.md` if this plugin later needs that surface.
+- If present, plugin-level `agents/openai.yaml` and skill-level
+  `agents/openai.yaml` are product metadata, not custom-agent manifests.
 - Codex only spawns subagents when explicitly asked or when the selected skill
   says delegation is authorized for the task. Otherwise run the same specialist
   track inline.
-- Upstream `agents/*.md` files are source material. Generated Codex custom
-  agents live under this plugin at `.codex/agents/*.toml`.
-- Claude `Agent(...)` examples are pseudocode in Codex. Use available named
-  Codex custom agents directly, or built-in `worker` / `explorer` subagents.
+- Claude `Agent(...)` examples are pseudocode in Codex. Use the matching
+  generated agent skill directly, or delegate to built-in `worker` / `explorer`
+  subagents when delegation is explicitly authorized.
 - Codex discovers custom agents from the current project `.codex/agents/` or
-  personal `~/.codex/agents/`. A plugin install does not, by itself, make
-  plugin-bundled agent files discoverable as named custom agents.
-- Run `$phx-init` in each Elixir/Phoenix project to install or refresh the
-  generated project-scoped custom agents.
+  personal `~/.codex/agents/`. The optional generated TOML files under this
+  plugin at `.codex/agents/*.toml` must be copied with `$phx-init` before they
+  can participate in project-scoped custom-agent discovery.
 - Use Codex agent names directly, for example `ash-resource-designer` or
   `security-analyzer`. Do not use Claude namespaces such as
   `elixir-phoenix:security-analyzer`.

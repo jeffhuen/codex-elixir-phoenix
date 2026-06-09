@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web Researcher"
+  short_description: "Fetches and extracts information from web sources efficiently"
+  default_prompt: "Use $web-researcher to run the Web Researcher specialist workflow for this Elixir/Phoenix task."
